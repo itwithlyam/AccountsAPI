@@ -1,14 +1,26 @@
 {
-    "cXHwk1zFiyg0qcIfu869": {
+    "base_access": {
       "name":  1,
-      "level": 4,
-      "check": "f9da8c7af80ccd51fe0baa9061e25dfeac5c7198ee4ed6d9110a4d64d5932e4b",
+      "level": 1,
+      "check": "base",
       "method": "sha256"
     },
-    "n": {
+    "read_permissions": {
+      "name":  1,
+      "level": 2,
+      "check": "read",
+      "method": "sha256"
+    },
+    "write_permissions": {
+      "name":  1,
+      "level": 3,
+      "check": "write",
+      "method": "sha256"
+    },
+    "administrator_permissions": {
         "name":  1,
         "level": 4,
-        "check": "d",
+        "check": "admin",
         "method": "sha256"
     }
 }

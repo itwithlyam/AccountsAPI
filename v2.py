@@ -118,7 +118,7 @@ def delete_accounts():
     auth = query.get("auth")
     if auth == None:
         return unauthorized(401)
-    if has_permissions(h_token=auth, lvl=3) is False:
+    if has_permissions(h_token=auth, lvl=4) is False:
         return forbidden(403)
     
 

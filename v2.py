@@ -74,6 +74,48 @@ def get_accounts():
 
     return response
 
+@app.route('/accountsbyid', methods=['GET'])
+def accounts_by_id():
+    mydb = mysql.connector.connect(host=dbconfig["HOST"], user=dbconfig["USER"], password=dbconfig["PASSWORD"],
+                            database=dbconfig["DATABASE"])
+    args = request.args
+    auth = args.get("auth")
+    if auth == None:
+        return unauthorized(401)
+    if has_permissions(h_token=auth, lvl=2) is False:
+        return forbidden(403)
+
+    if 'id' in args:
+        id = args.get("id")
+    else:
+        return badrequest(400)
+
+    mycursor = mydb.cursor()
+    mycursor.execute(f"SELECT * FROM accounts WHERE id={id}")
+    myresult = mycursor.fetchall()
+
+    accountData = "{"
+
+    yes = False
+
+    for account in myresult:
+        id = account[1]
+        accountData += f'"{id}":'
+        data = account[0].replace('}', f',"id":"{id}"}}')
+        accountData += data
+        accountData += ","
+        yes = True
+
+    if yes: accountData = accountData[:-1]
+    accountData += "}"
+
+    response = flask.make_response(accountData)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+
+    print(f"OUTPUTTED ACCOUNT {id}")
+
+    return response
+
 
 @app.route('/makeaccounts', methods=['POST', 'GET'])
 def send_accounts():
@@ -177,19 +219,19 @@ def modify_accounts():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return "<h1>404 Not Found</h1><p>Resource does not exist</p>", 404
+    return '{ "code": "404" }', 404
 @app.errorhandler(403)
 def forbidden(e):
-    return "<h1>403 Forbidden</h1><p>Incorrect access token</p>", 403
+    return '{ "code": "403" }', 403
 @app.errorhandler(400)
 def badrequest(e):
-    return "<h1>400 Bad Request</h1><p>Check headers and body data</p>", 400
+    return '{ "code": "400" }', 400
 @app.errorhandler(401)
 def unauthorized(e):
-    return "<h1>401 Unauthorized</h1><p>Access token missing or not found</p>", 401
+    return '{ "code": "401" }', 401
 @app.errorhandler(500)
 def servererror(e):
-    return f"<h1>500 Server Error</h1><p>The server encountered an error. Try again later.</p><h7>Error code: <br />{e}</h7>", 500
+    return '{ "code": "500" }', 500
 
 
 if __name__ == "__main__": app.run()

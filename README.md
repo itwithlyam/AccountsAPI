@@ -52,8 +52,11 @@ A template API for a basic accounts system.
 The API is built on Python, which means that it is easy to run.
 
 **Dependencies:**
+
 `mysql.connector`: ```pip install mysql.connector```
+
 `flask`: ```pip install flask```
+
 `waitress`: ```pip install waitress```
 
 ### Deployment
